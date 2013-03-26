@@ -7,9 +7,7 @@
 //
 
 #import "LBYouTubeExtractor.h"
-#import "JSONKit.h"
 
-#define USE_NATIVE_JSON_PARSER  1
 #define USE_NATIVE_UNESCAPE     1
 
 static NSString const * kUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3";
@@ -129,32 +127,9 @@ NSInteger const LBYouTubeExtractorErrorCodeNoJSONData   =    3;
     // Stop if cancellation is requested
     if ([self isCancelled]) return nil;
     
-    BOOL useNativeParser;
-#if USE_NATIVE_JSON_PARSER
-    useNativeParser = ([NSJSONSerialization class] != nil);
-#else
-    useNativeParser = NO;
-#endif
-    
     NSError *decodingError = nil;
     NSData *jsonData = [JSON dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *jsonDict;
-    
-    if (useNativeParser) {
-        jsonDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:&decodingError];
-    }
-    else {
-        // Setup JSON decoder
-        JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];        
-        
-        // Guard against JSONKit exceptions
-        @try {
-            jsonDict = [decoder objectWithData:jsonData error:&decodingError];
-        }
-        @catch (NSException *exception) {
-            jsonDict = nil;
-        }
-    }
+    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:&decodingError];
     
     // Check errors
     if (jsonDict == nil || decodingError) {

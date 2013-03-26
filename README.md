@@ -39,7 +39,7 @@ extractor.youTubeURL = [NSURL URLWithString:@"http://www.youtube.com/watch?v=1fT
 ```
 
 ## Requirements
-LBYouTubeView requires iOS 4. Also, it is deployed for an ARC environment.
+LBYouTubeView requires iOS 5. Also, it is deployed for an ARC environment.
 
 ## License
 LBYouTubeView is licensed under the [MIT License](http://opensource.org/licenses/mit-license.php). 
